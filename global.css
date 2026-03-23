@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "uniwind";
+
+@theme {
+  --font-bai-regular: "BaiJamjuree-Regular";
+  --font-bai-light: "BaiJamjuree-Light";
+  --font-bai-medium: "BaiJamjuree-Medium";
+  --font-bai-semibold: "BaiJamjuree-SemiBold";
+  --font-bai-italic: "BaiJamjuree-Italic";
+  --font-bai-bold: "BaiJamjuree-Bold";
+
+  /* Nectar brand colors */
+  --color-primary: #53B175;
+  --color-primary-dark: #3A8A56;
+  --color-secondary: #F2F3F2;
+  --color-accent: #FFF5E1;
+  --color-muted: #7C7C7C;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E2E2;
+}
