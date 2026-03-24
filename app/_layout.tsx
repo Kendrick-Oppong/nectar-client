@@ -30,9 +30,10 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="dark" animated />
       <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="checkout" />
+        {/* <Stack.Screen name="checkout" /> */}
         <Stack.Screen name="order-accepted" />
       </Stack>
     </SafeAreaProvider>
