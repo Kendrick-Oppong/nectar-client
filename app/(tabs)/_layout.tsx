@@ -1,16 +1,23 @@
+import { COLORS } from "@/lib/constants/colors";
 import { Tabs } from "expo-router";
-import { ShoppingBag, Search, ShoppingCart, Heart, User } from "lucide-react-native";
+import {
+  ShoppingBag,
+  Search,
+  ShoppingCart,
+  Heart,
+  User,
+} from "lucide-react-native";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#53B175",
-        tabBarInactiveTintColor: "#7C7C7C",
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.icon,
         tabBarStyle: {
           borderTopWidth: 1,
-          borderTopColor: "#E2E2E2",
+          borderTopColor: COLORS.accent,
           height: 60,
           paddingBottom: 8,
         },
@@ -20,7 +27,9 @@ export default function TabsLayout() {
         name="shop"
         options={{
           title: "Shop",
-          tabBarIcon: ({ color, size }) => <ShoppingBag color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => (
+            <ShoppingBag color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -34,7 +43,9 @@ export default function TabsLayout() {
         name="cart"
         options={{
           title: "Cart",
-          tabBarIcon: ({ color, size }) => <ShoppingCart color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => (
+            <ShoppingCart color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen
