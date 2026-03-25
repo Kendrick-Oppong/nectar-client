@@ -1,8 +1,10 @@
 import { View, Text } from "react-native";
 import { Image } from "expo-image";
 import Button from "@/components/ui/Button";
+import { useRouter } from "expo-router";
 
 export default function Index() {
+  const router = useRouter();
   return (
     <View className="flex-1">
       {/* Background Image */}
@@ -34,7 +36,10 @@ export default function Index() {
             Your one-stop shop for all your grocery needs
           </Text>
 
-          <Button className="w-full">
+          <Button
+            className="w-full"
+            onPress={() => router.push("/(auth)/register")}
+          >
             <Text className="text-white font-bai-semibold">Get Started</Text>
           </Button>
         </View>
