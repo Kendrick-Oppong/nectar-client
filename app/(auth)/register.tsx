@@ -215,7 +215,7 @@ export default function RegisterScreen() {
               <Text className="font-bai-regular text-gray-600 text-sm">
                 Already have an account?{" "}
               </Text>
-              <Pressable onPress={() => router.push("/(auth)/sign-in" as any)}>
+              <Pressable onPress={() => router.push("/(auth)/login")}>
                 <Text className="text-primary font-bai-semibold text-sm">
                   Log In
                 </Text>

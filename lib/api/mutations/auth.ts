@@ -1,27 +1,10 @@
 import { api } from "@/lib/api/axios";
 import { API_ENDPOINTS } from "@/lib/constants/api-endpoints";
-import { User } from "@/lib/store/auth-store";
-
-// Types
-export interface LoginValues {
-  email: string;
-  password?: string;
-}
-
-export interface RegisterValues {
-  name: string;
-  email: string;
-  password?: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
+import { LoginFormData, RegisterFormData } from "@/lib/validators/auth";
+import { AuthResponse } from "@/types/auth";
 
 export const authMutationsApi = {
-  login: async (data: LoginValues) => {
+  login: async (data: LoginFormData) => {
     const response = await api.post<AuthResponse>(
       API_ENDPOINTS.AUTH.LOGIN,
       data,
@@ -29,7 +12,7 @@ export const authMutationsApi = {
     return response.data;
   },
 
-  register: async (data: RegisterValues) => {
+  register: async (data: RegisterFormData) => {
     const response = await api.post<AuthResponse>(
       API_ENDPOINTS.AUTH.REGISTER,
       data,

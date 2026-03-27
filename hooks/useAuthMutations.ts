@@ -1,9 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import {
-  authMutationsApi,
-  LoginValues,
-  RegisterValues,
-} from "@/lib/api/mutations/auth";
+import { authMutationsApi } from "@/lib/api/mutations/auth";
+import type { LoginValues, RegisterValues } from "@/types/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 import { useRouter } from "expo-router";

@@ -1,16 +1,7 @@
 import { create } from "zustand";
 import * as SecureStore from "expo-secure-store";
 
-export interface User {
-  id: string;
-  email: string;
-  name?: string | null;
-  avatarUrl?: string | null;
-  phone?: string | null;
-  isProfileComplete: boolean;
-  selectedZoneId?: string | null;
-  selectedAreaId?: string | null;
-}
+import type { User } from "@/types/auth";
 
 interface AuthState {
   user: User | null;
@@ -37,6 +28,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Save tokens securely
     await SecureStore.setItemAsync("accessToken", accessToken);
     await SecureStore.setItemAsync("refreshToken", refreshToken);
+    await SecureStore.setItemAsync("user", JSON.stringify(user));
 
     set({ user, accessToken, refreshToken, isAuthenticated: true });
   },
@@ -51,6 +43,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   clearCredentials: async () => {
     await SecureStore.deleteItemAsync("accessToken");
     await SecureStore.deleteItemAsync("refreshToken");
+    await SecureStore.deleteItemAsync("user");
 
     set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
   },
@@ -59,12 +52,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const accessToken = await SecureStore.getItemAsync("accessToken");
       const refreshToken = await SecureStore.getItemAsync("refreshToken");
+      const userStr = await SecureStore.getItemAsync("user");
 
-      if (accessToken && refreshToken) {
-        // Technically, you might want to fetch the user profile here,
-        // or wait for a silent refresh or user endpoint.
-        // For now, we just restore tokens. The app can fetch /users/me later.
-        set({ accessToken, refreshToken, isAuthenticated: true, isHydrated: true });
+      if (accessToken && refreshToken && userStr) {
+        // We directly restore the cached user profile to prevent Auth Guard routing issues
+        const user = JSON.parse(userStr);
+        set({ user, accessToken, refreshToken, isAuthenticated: true, isHydrated: true });
       } else {
         set({ isHydrated: true });
       }
