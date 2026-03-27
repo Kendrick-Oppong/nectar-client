@@ -19,9 +19,13 @@ import { RegisterFormData, registerSchema } from "@/lib/validators/auth";
 import { Eye, EyeOff } from "lucide-react-native";
 import { BackButton } from "@/components/ui/BackButton";
 
+import { useRegister } from "@/hooks/useAuthMutations";
+
 export default function RegisterScreen() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+
+  const { mutate: register, isPending } = useRegister();
 
   const {
     control,
@@ -37,14 +41,7 @@ export default function RegisterScreen() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    const payload = {
-      email: data.email,
-      password: data.password,
-      name: data.name,
-    };
-
-    console.log("Register payload:", payload);
-    // TODO: API call
+    register({ email: data.email, password: data.password, name: data.name });
   };
 
   return (
@@ -202,11 +199,14 @@ export default function RegisterScreen() {
             {/* Submit */}
             <Button
               onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isPending}
+              loading={isPending}
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {isSubmitting ? "Creating account…" : "Create Account"}
+                {isSubmitting || isPending
+                  ? "Creating account…"
+                  : "Create Account"}
               </Text>
             </Button>
 
@@ -215,7 +215,7 @@ export default function RegisterScreen() {
               <Text className="font-bai-regular text-gray-600 text-sm">
                 Already have an account?{" "}
               </Text>
-              <Pressable onPress={() => router.push("/(auth)/login")}>
+              <Pressable onPress={() => router.push("/(auth)/sign-in" as any)}>
                 <Text className="text-primary font-bai-semibold text-sm">
                   Log In
                 </Text>

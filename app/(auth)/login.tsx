@@ -19,10 +19,13 @@ import { COLORS } from "@/lib/constants/colors";
 import { BackButton } from "@/components/ui/BackButton";
 import { LoginFormData, loginSchema } from "@/lib/validators/auth";
 
+import { useLogin } from "@/hooks/useAuthMutations";
 
 export default function LoginScreen() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+
+  const { mutate: login, isPending } = useLogin();
 
   const {
     control,
@@ -37,13 +40,7 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const payload = {
-      email: data.email,
-      password: data.password,
-    };
-
-    console.log("Login payload:", payload);
-    // TODO:API call your 
+    login({ email: data.email, password: data.password });
   };
 
   return (
@@ -168,11 +165,12 @@ export default function LoginScreen() {
             {/* Submit */}
             <Button
               onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isPending}
+              loading={isPending}
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {isSubmitting ? "Logging in…" : "Log In"}
+                {isSubmitting || isPending ? "Logging in…" : "Log In"}
               </Text>
             </Button>
 
