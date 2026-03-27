@@ -38,7 +38,7 @@ export default function Index() {
 
           <Button
             className="w-full"
-            onPress={() => router.push("/(auth)/register")}
+            onPress={() => router.push("/(auth)/login")}
           >
             <Text className="text-white font-bai-semibold">Get Started</Text>
           </Button>

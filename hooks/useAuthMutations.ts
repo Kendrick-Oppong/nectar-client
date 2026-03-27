@@ -1,16 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { authMutationsApi } from "@/lib/api/mutations/auth";
-import type { LoginValues, RegisterValues } from "@/types/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 import { useRouter } from "expo-router";
+import { LoginFormData, RegisterFormData } from "@/lib/validators/auth";
 
 export function useLogin() {
   const setCredentials = useAuthStore((state) => state.setCredentials);
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: LoginValues) => authMutationsApi.login(data),
+    mutationFn: (data: LoginFormData) => authMutationsApi.login(data),
     onSuccess: async (data) => {
       await setCredentials(data.user, data.accessToken, data.refreshToken);
       const { user } = useAuthStore.getState();
@@ -32,7 +32,7 @@ export function useRegister() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: RegisterValues) => authMutationsApi.register(data),
+    mutationFn: (data: RegisterFormData) => authMutationsApi.register(data),
     onSuccess: async (data) => {
       await setCredentials(data.user, data.accessToken, data.refreshToken);
       router.replace("/(auth)/location");
