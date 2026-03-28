@@ -1,50 +1,72 @@
-# Welcome to your Expo app 👋
+# 🛒 Nectar - Grocery Delivery App (Client)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A beautiful, performant, and highly optimized mobile application for grocery shopping, built with **React Native** and **Expo**.
 
-## Get started
+## 📸 App Preview
 
-1. Install dependencies
+Below are the core screens driving the user experience. All images are securely located in `/assets/screenshots`.
 
+<div style="display: flex; gap: 10px; overflow-x: auto;">
+  <img src="./assets/screenshots/onbording.png" alt="Onboarding" width="200" />
+  <img src="./assets/screenshots/log in.png" alt="Login" width="200" />
+  <img src="./assets/screenshots/Home Screen.png" alt="Home Screen" width="200" />
+  <img src="./assets/screenshots/Product Detail.png" alt="Product Detail" width="200" />
+  <img src="./assets/screenshots/My Cart.png" alt="My Cart" width="200" />
+</div>
+
+## 🚀 Tech Stack
+
+- **Framework**: [Expo](https://expo.dev/) & [React Native](https://reactnative.dev/)
+- **Routing**: [Expo Router](https://docs.expo.dev/router/introduction/) (File-based routing)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Data Fetching**: [TanStack React Query](https://tanstack.com/query/latest) & Axios
+- **Styling**: [Uniwind](https://uniwind.dev/) (Tailwind-like utility classes)
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Storage**: Expo SecureStore (Encrypted local persistence)
+
+## 📦 Installation & Setup
+
+1. **Clone and Install Dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-   npx expo start
+2. **Environment Variables**
+   Create a `.env` file at the root of the project:
+   ```env
+   # Android Emulator Alias
+   EXPO_PUBLIC_API_URL=http://10.0.2.2:3000/api
+   
+   # Physical Device / iOS Simulator (Use your local network IP)
+   # EXPO_PUBLIC_API_URL=http://192.168.1.X:3000/api
    ```
 
-In the output, you'll find options to open the app in a
+3. **Start the Application**
+   ```bash
+   npx expo start -c
+   ```
+   *Note: Always use `-c` to clear the cache when changing environment variables!*
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🔐 Architecture Features
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 1. Global Auth Guard
+We utilize a root `_layout.tsx` to handle authentication routing dynamically checking `isHydrated` and `isAuthenticated` via **Zustand**.
+- **Logged Out**: Confined to the Welcome and `(auth)` screens.
+- **Incomplete Profile**: Gated to the `/(auth)/location` screen to ensure onboarding finishes.
+- **Fully Authenticated**: Seamlessly transferred to the `/(tabs)` application view.
 
-## Get a fresh project
+### 2. Silent Token Rotation
+The global `axios.ts` client utilizes automatic request and response interceptors.
+- Injects the `Bearer` token securely.
+- If a `401 Unauthorized` fires, it pauses all concurrent queries, silently hits the backend `/auth/refresh` endpoint using the `refreshToken`, and perfectly resumes the traffic without the user ever noticing.
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+## 📂 Folder Structure
+```text
+nectar-client/
+├── app/               # Expo Router pages (Auth, Tabs, etc.)
+├── assets/            # Fonts, Images, Screenshots
+├── components/        # Reusable UI components
+├── hooks/             # Custom React Query & logic hooks
+├── lib/               # Utilities (Axios, Endpoints, Zustand Store, Validators)
+└── types/             # Centralized TypeScript definitions
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
