@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react-native";
+import { Eye, EyeOff, Loader } from "lucide-react-native";
 import ScreenContainer from "@/components/ui/ScreenContainer";
 import Button from "@/components/ui/Button";
 import { COLORS } from "@/lib/constants/colors";
@@ -30,7 +30,7 @@ export default function LoginScreen() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -49,8 +49,8 @@ export default function LoginScreen() {
       contentContainerStyle={{ flexGrow: 1 }}
       className="flex-1"
     >
-      <ScreenContainer>
-        <BackButton />
+      <ScreenContainer pointerEvents={isPending ? "none" : "auto"}>
+        <BackButton className={isPending ? "opacity-50" : ""} />
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -85,6 +85,7 @@ export default function LoginScreen() {
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    editable={!isPending}
                     placeholder="example@email.com"
                     value={value}
                     onChangeText={onChange}
@@ -95,7 +96,7 @@ export default function LoginScreen() {
                       errors.email
                         ? "bg-red-50 border border-red-300"
                         : "bg-gray-100 border border-gray-200"
-                    }`}
+                    } ${isPending ? "opacity-50" : ""}`}
                     placeholderTextColor={COLORS.icon}
                   />
                 )}
@@ -124,15 +125,17 @@ export default function LoginScreen() {
                     }`}
                   >
                     <TextInput
+                      editable={!isPending}
                       placeholder="••••••••"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
                       secureTextEntry={!showPassword}
-                      className="flex-1 py-3 text-gray-900 font-bai-regular"
+                      className={`flex-1 py-3 text-gray-900 font-bai-regular ${isPending ? "opacity-50" : ""}`}
                       placeholderTextColor={COLORS.icon}
                     />
                     <Pressable
+                      disabled={isPending}
                       onPress={() => setShowPassword((prev) => !prev)}
                       hitSlop={8}
                       className="pl-2"
@@ -155,7 +158,10 @@ export default function LoginScreen() {
 
             {/* Forgot Password */}
             <View className="items-end mb-6">
-              <Pressable onPress={() => router.push("/(auth)/forgot-password")}>
+              <Pressable
+                disabled={isPending}
+                onPress={() => router.push("/(auth)/forgot-password")}
+              >
                 <Text className="text-xs font-bai-medium text-primary">
                   Forgot password?
                 </Text>
@@ -165,12 +171,24 @@ export default function LoginScreen() {
             {/* Submit */}
             <Button
               onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitting || isPending}
-              loading={isPending}
+              disabled={isPending}
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {isSubmitting || isPending ? "Logging in…" : "Log In"}
+                {isPending ? (
+                  <View className="flex-row justify-center items-center gap-2">
+                    <Loader
+                      size={18}
+                      className="animate-spin"
+                      color={COLORS.white}
+                    />
+                    <Text className="font-bai-regular text-white text-base">
+                      Logging in
+                    </Text>
+                  </View>
+                ) : (
+                  "Log In"
+                )}
               </Text>
             </Button>
 
@@ -179,7 +197,10 @@ export default function LoginScreen() {
               <Text className="font-bai-regular text-gray-600 text-sm">
                 Don&apos;t have an account?{" "}
               </Text>
-              <Pressable onPress={() => router.push("/(auth)/register")}>
+              <Pressable
+                disabled={isPending}
+                onPress={() => router.push("/(auth)/register")}
+              >
                 <Text className="text-primary font-bai-semibold text-sm">
                   Sign Up
                 </Text>
