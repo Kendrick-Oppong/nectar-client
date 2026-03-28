@@ -50,8 +50,6 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // We cast the config to include our custom '_retry' flag
-    // This prevents infinite loops if the refresh token endpoint itself returns a 401
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
@@ -60,6 +58,12 @@ api.interceptors.response.use(
     if (!isAxiosError(error) || !error.response) {
       return Promise.reject(error);
     }
+
+    // Helper to always reject with a clean, readable message from the API
+    const rejectWithMessage = () => {
+      const message = error.response?.data?.message || error.message;
+      return Promise.reject(new Error(message));
+    };
 
     const { status } = error.response;
 
@@ -70,7 +74,7 @@ api.interceptors.response.use(
         originalRequest.url === API_ENDPOINTS.AUTH.LOGIN ||
         originalRequest.url === API_ENDPOINTS.AUTH.REFRESH_TOKEN
       ) {
-        return Promise.reject(error);
+        return rejectWithMessage();
       }
 
       if (isRefreshing) {
@@ -132,18 +136,13 @@ api.interceptors.response.use(
         const { clearCredentials } = useAuthStore.getState();
         await clearCredentials();
 
-        // In React Native, routing is decoupled from window.location.
-        // Expo Router's useRouter() can't be safely called outside components.
-        // A common pattern is having an Auth Guard component listen to `isAuthenticated` and redirect.
-
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
 
-    // Default error handling for other statuses
-    const message = error.response?.data?.message || error.message;
-    return Promise.reject(new Error(message));
+    // Default error handling for all other statuses
+    return rejectWithMessage();
   },
 );
