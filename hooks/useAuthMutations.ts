@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { authMutationsApi } from "@/lib/api/mutations/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
+import Toast from "react-native-toast-message";
 
 import { useRouter } from "expo-router";
 import { LoginFormData, RegisterFormData } from "@/lib/validators/auth";
@@ -13,6 +14,13 @@ export function useLogin() {
     mutationFn: (data: LoginFormData) => authMutationsApi.login(data),
     onSuccess: async (data) => {
       await setCredentials(data.user, data.accessToken, data.refreshToken);
+
+      Toast.show({
+        type: "success",
+        text1: "Welcome back! 👋",
+        text2: "You have successfully logged in.",
+      });
+
       const { user } = useAuthStore.getState();
       if (user && !user.isProfileComplete) {
         router.replace("/(auth)/location");
@@ -21,8 +29,11 @@ export function useLogin() {
       }
     },
     onError: (err) => {
-      console.error("Login Error:", err.message);
-      // Optional: Add a toast or alert here
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: err.message,
+      });
     },
   });
 }
@@ -35,10 +46,21 @@ export function useRegister() {
     mutationFn: (data: RegisterFormData) => authMutationsApi.register(data),
     onSuccess: async (data) => {
       await setCredentials(data.user, data.accessToken, data.refreshToken);
+
+      Toast.show({
+        type: "success",
+        text1: "Account Created! 🎉",
+        text2: "Let's finish setting up your profile.",
+      });
+
       router.replace("/(auth)/location");
     },
     onError: (err) => {
-      console.error("Register Error:", err.message);
+      Toast.show({
+        type: "error",
+        text1: "Registration Failed",
+        text2: err.message,
+      });
     },
   });
 }

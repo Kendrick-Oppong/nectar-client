@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "@/lib/store/auth-store";
+import Toast from "react-native-toast-message";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
@@ -87,6 +88,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="order-accepted" />
         </Stack>
+        <Toast />
       </SafeAreaProvider>
     </QueryClientProvider>
   );
