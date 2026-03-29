@@ -116,7 +116,11 @@ api.interceptors.response.use(
         if (newAccessToken && newRefreshToken) {
           // Update store securely
           const { setCredentials } = useAuthStore.getState();
-          await setCredentials(user, newAccessToken, newRefreshToken);
+          await setCredentials({
+            user,
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          });
 
           // Process queued requests
           processQueue(null, newAccessToken);
