@@ -5,6 +5,10 @@ export const COLORS = {
   black: "#000000", // black
   white: "#FFFFFF", // white
   icon: "#868686",
+  textTitle: "#181725",
+  textSub: "#7C7C7C",
+  error: "#EF4444",
+  info: "#3B82F6",
 };
 
 export const blurhash =
