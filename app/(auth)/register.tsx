@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
@@ -30,7 +31,7 @@ export default function RegisterScreen() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -50,8 +51,8 @@ export default function RegisterScreen() {
       contentContainerStyle={{ flexGrow: 1 }}
       className="flex-1"
     >
-      <ScreenContainer>
-        <BackButton />
+      <ScreenContainer pointerEvents={isPending ? "none" : "auto"}>
+        <BackButton className={isPending ? "opacity-50" : ""} />
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -86,6 +87,7 @@ export default function RegisterScreen() {
                 name="name"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    editable={!isPending}
                     placeholder="John Doe"
                     value={value}
                     onChangeText={onChange}
@@ -116,6 +118,7 @@ export default function RegisterScreen() {
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    editable={!isPending}
                     placeholder="example@email.com"
                     value={value}
                     onChangeText={onChange}
@@ -155,6 +158,7 @@ export default function RegisterScreen() {
                     }`}
                   >
                     <TextInput
+                      editable={!isPending}
                       placeholder="••••••••"
                       value={value}
                       onChangeText={onChange}
@@ -199,14 +203,20 @@ export default function RegisterScreen() {
             {/* Submit */}
             <Button
               onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitting || isPending}
-              loading={isPending}
+              disabled={isPending}
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {isSubmitting || isPending
-                  ? "Creating account…"
-                  : "Create Account"}
+                {isPending ? (
+                  <View className="flex-row justify-center items-center gap-2">
+                    <ActivityIndicator size={18} color={COLORS.white} />
+                    <Text className="font-bai-regular text-white text-base">
+                      Creating account
+                    </Text>
+                  </View>
+                ) : (
+                  "Create Account"
+                )}
               </Text>
             </Button>
 
@@ -215,7 +225,10 @@ export default function RegisterScreen() {
               <Text className="font-bai-regular text-gray-600 text-sm">
                 Already have an account?{" "}
               </Text>
-              <Pressable onPress={() => router.push("/(auth)/login")}>
+              <Pressable
+                disabled={isPending}
+                onPress={() => router.push("/(auth)/login")}
+              >
                 <Text className="text-primary font-bai-semibold text-sm">
                   Log In
                 </Text>
