@@ -13,7 +13,11 @@ export function useLogin() {
   return useMutation({
     mutationFn: (data: LoginFormData) => authMutationsApi.login(data),
     onSuccess: async (data) => {
-      await setCredentials(data.user, data.accessToken, data.refreshToken);
+      await setCredentials({
+        user: data.user,
+        accessToken: data.tokens.accessToken,
+        refreshToken: data.tokens.refreshToken,
+      });
 
       Toast.show({
         type: "success",
@@ -23,7 +27,7 @@ export function useLogin() {
 
       const { user } = useAuthStore.getState();
       if (user && !user.isProfileComplete) {
-        router.replace("/(auth)/location");
+        router.replace("/(onboarding)/select-location");
       } else {
         router.replace("/(tabs)/explore");
       }
@@ -45,7 +49,11 @@ export function useRegister() {
   return useMutation({
     mutationFn: (data: RegisterFormData) => authMutationsApi.register(data),
     onSuccess: async (data) => {
-      await setCredentials(data.user, data.accessToken, data.refreshToken);
+      await setCredentials({
+        user: data.user,
+        accessToken: data.tokens.accessToken,
+        refreshToken: data.tokens.refreshToken,
+      });
 
       Toast.show({
         type: "success",
@@ -53,7 +61,7 @@ export function useRegister() {
         text2: "Let's finish setting up your profile.",
       });
 
-      router.replace("/(auth)/location");
+      router.replace("/(onboarding)/select-location");
     },
     onError: (err) => {
       Toast.show({
