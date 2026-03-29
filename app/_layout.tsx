@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "@/lib/store/auth-store";
 import Toast from "react-native-toast-message";
+import { toastConfig } from "@/lib/config/toast";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
@@ -63,8 +64,8 @@ export default function RootLayout() {
     // User IS logged in
     if (user && !user.isProfileComplete) {
       // MUST complete profile via location setup
-      if (segments.join("/") !== "(auth)/location") {
-        router.replace("/(auth)/location");
+      if (segments.join("/") !== "(onboarding)/select-location") {
+        router.replace("/(onboarding)/select-location");
       }
       return;
     }
@@ -88,7 +89,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="order-accepted" />
         </Stack>
-        <Toast />
+        <Toast config={toastConfig} />
       </SafeAreaProvider>
     </QueryClientProvider>
   );
