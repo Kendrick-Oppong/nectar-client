@@ -19,7 +19,6 @@ import Button from "@/components/ui/Button";
 import { COLORS } from "@/lib/constants/colors";
 import { BackButton } from "@/components/ui/BackButton";
 import { LoginFormData, loginSchema } from "@/lib/validators/auth";
-
 import { useLogin } from "@/hooks/useAuthMutations";
 
 export default function LoginScreen() {
@@ -176,7 +175,7 @@ export default function LoginScreen() {
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {!isPending ? (
+                {isPending ? (
                   <View className="flex-row justify-center items-center gap-2">
                     <ActivityIndicator size={18} color={COLORS.white} />
                     <Text className="font-bai-regular text-white text-base">
