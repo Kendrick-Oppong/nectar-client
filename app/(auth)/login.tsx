@@ -7,12 +7,13 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader } from "lucide-react-native";
+import { Eye, EyeOff } from "lucide-react-native";
 import ScreenContainer from "@/components/ui/ScreenContainer";
 import Button from "@/components/ui/Button";
 import { COLORS } from "@/lib/constants/colors";
@@ -175,15 +176,11 @@ export default function LoginScreen() {
               className="w-full mb-2"
             >
               <Text className="font-bai-semibold text-white text-base">
-                {isPending ? (
+                {!isPending ? (
                   <View className="flex-row justify-center items-center gap-2">
-                    <Loader
-                      size={18}
-                      className="animate-spin"
-                      color={COLORS.white}
-                    />
+                    <ActivityIndicator size={18} color={COLORS.white} />
                     <Text className="font-bai-regular text-white text-base">
-                      Logging in
+                      Validating
                     </Text>
                   </View>
                 ) : (
