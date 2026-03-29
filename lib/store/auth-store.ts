@@ -1,21 +1,8 @@
 import { create } from "zustand";
 import * as SecureStore from "expo-secure-store";
 
-import type { User } from "@/types/auth";
-
-interface AuthState {
-  user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
-  isHydrated: boolean; // Tells us whether we have finished checking SecureStore on app load
-
-  // Actions
-  setCredentials: (user: User, accessToken: string, refreshToken: string) => Promise<void>;
-  updateUser: (user: Partial<User>) => void;
-  clearCredentials: () => Promise<void>;
-  hydrate: () => Promise<void>;
-}
+import { AUTH_KEYS } from "@/lib/constants/auth-keys";
+import type { AuthState } from "@/types/auth";
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
@@ -24,11 +11,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   isHydrated: false,
 
-  setCredentials: async (user, accessToken, refreshToken) => {
+  setCredentials: async ({ user, accessToken, refreshToken }) => {
     // Save tokens securely
-    await SecureStore.setItemAsync("accessToken", accessToken);
-    await SecureStore.setItemAsync("refreshToken", refreshToken);
-    await SecureStore.setItemAsync("user", JSON.stringify(user));
+    if (accessToken)
+      await SecureStore.setItemAsync(AUTH_KEYS.ACCESS_TOKEN, accessToken);
+    if (refreshToken)
+      await SecureStore.setItemAsync(AUTH_KEYS.REFRESH_TOKEN, refreshToken);
+    await SecureStore.setItemAsync(AUTH_KEYS.USER, JSON.stringify(user));
 
     set({ user, accessToken, refreshToken, isAuthenticated: true });
   },
@@ -41,23 +30,38 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   clearCredentials: async () => {
-    await SecureStore.deleteItemAsync("accessToken");
-    await SecureStore.deleteItemAsync("refreshToken");
-    await SecureStore.deleteItemAsync("user");
+    await SecureStore.deleteItemAsync(AUTH_KEYS.ACCESS_TOKEN);
+    await SecureStore.deleteItemAsync(AUTH_KEYS.REFRESH_TOKEN);
+    await SecureStore.deleteItemAsync(AUTH_KEYS.USER);
 
-    set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
+    set({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    });
   },
 
   hydrate: async () => {
     try {
-      const accessToken = await SecureStore.getItemAsync("accessToken");
-      const refreshToken = await SecureStore.getItemAsync("refreshToken");
-      const userStr = await SecureStore.getItemAsync("user");
+      const accessToken = await SecureStore.getItemAsync(
+        AUTH_KEYS.ACCESS_TOKEN,
+      );
+      const refreshToken = await SecureStore.getItemAsync(
+        AUTH_KEYS.REFRESH_TOKEN,
+      );
+      const userStr = await SecureStore.getItemAsync(AUTH_KEYS.USER);
 
       if (accessToken && refreshToken && userStr) {
         // We directly restore the cached user profile to prevent Auth Guard routing issues
         const user = JSON.parse(userStr);
-        set({ user, accessToken, refreshToken, isAuthenticated: true, isHydrated: true });
+        set({
+          user,
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+          isHydrated: true,
+        });
       } else {
         set({ isHydrated: true });
       }

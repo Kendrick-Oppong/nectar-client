@@ -11,6 +11,27 @@ export interface User {
 
 export interface AuthResponse {
   user: User;
-  accessToken: string;
-  refreshToken: string;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isHydrated: boolean; // Tells us whether we have finished checking SecureStore on app load
+
+  // Actions
+  setCredentials: (args: {
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+  }) => Promise<void>;
+  updateUser: (user: Partial<User>) => void;
+  clearCredentials: () => Promise<void>;
+  hydrate: () => Promise<void>;
 }
