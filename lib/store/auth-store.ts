@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setCredentials: async ({ user, accessToken, refreshToken }) => {
     // Save tokens securely
-    const promises = [];
+    const promises: Promise<void>[] = [];
     if (accessToken)
       promises.push(
         SecureStore.setItemAsync(AUTH_KEYS.ACCESS_TOKEN, accessToken),
