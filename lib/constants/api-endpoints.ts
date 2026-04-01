@@ -12,4 +12,8 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout",
     REFRESH_TOKEN: "/auth/refresh",
   },
+  LOCATIONS: {
+    GET_ZONES: "/locations/zones",
+    UPDATE_PROFILE: "/locations/profile",
+  },
 };
