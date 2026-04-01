@@ -88,6 +88,7 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="order-accepted" />
+          <Stack.Screen name="checkout" />
         </Stack>
         <Toast config={toastConfig} />
       </SafeAreaProvider>
