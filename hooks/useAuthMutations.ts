@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { LoginFormData, RegisterFormData } from "@/lib/validators/auth";
 
 export function useLogin() {
-  const setCredentials = useAuthStore((state) => state.setCredentials);
+  const { setCredentials } = useAuthStore();
   const router = useRouter();
 
   return useMutation({
