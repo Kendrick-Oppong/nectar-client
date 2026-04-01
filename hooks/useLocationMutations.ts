@@ -22,7 +22,7 @@ export function useUpdateLocation() {
         text2: "Your profile is now complete.",
       });
 
-      router.replace("/(tabs)/explore");
+      router.replace("/(tabs)/shop");
     },
     onError: (err) => {
       Toast.show({

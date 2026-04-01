@@ -73,7 +73,7 @@ export default function RootLayout() {
     // Profile is complete!
     // Prevent accessing auth screens or index when already logged in
     if (inAuthGroup || isIndex) {
-      router.replace("/(tabs)/explore");
+      router.replace("/(tabs)/shop");
     }
   }, [isAuthenticated, isHydrated, loaded, segments, user, router]);
 

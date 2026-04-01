@@ -29,7 +29,7 @@ export function useLogin() {
       if (user && !user.isProfileComplete) {
         router.replace("/(onboarding)/select-location");
       } else {
-        router.replace("/(tabs)/explore");
+        router.replace("/(tabs)/shop");
       }
     },
     onError: (err) => {
