@@ -22,7 +22,7 @@ export default function SelectLocationScreen() {
   const { mutate: updateLocation, isPending: isUpdating } = useUpdateLocation();
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
-
+  console.log(zones);
   // Modal State
   const [isZoneModalVisible, setZoneModalVisible] = useState(false);
   const [isAreaModalVisible, setAreaModalVisible] = useState(false);

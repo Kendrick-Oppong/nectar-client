@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     CHANGE_PASSWORD: "/auth/change-password",
     LOGOUT: "/auth/logout",
     REFRESH_TOKEN: "/auth/refresh",
+    ME: "/auth/me",
   },
   LOCATIONS: {
     GET_ZONES: "/locations/zones",

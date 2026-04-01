@@ -114,13 +114,22 @@ api.interceptors.response.use(
         } = response.data;
 
         if (newAccessToken && newRefreshToken) {
+          // Get latest user from store as fallback if refresh didn't return one
+          const currentUser =
+            user || useAuthStore.getState().user;
+
           // Update store securely
           const { setCredentials } = useAuthStore.getState();
           await setCredentials({
-            user,
+            user: currentUser,
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
           });
+
+          // If the refresh response included a fresh user, also persist it
+          if (user) {
+            await useAuthStore.getState().updateUser(user);
+          }
 
           // Process queued requests
           processQueue(null, newAccessToken);
