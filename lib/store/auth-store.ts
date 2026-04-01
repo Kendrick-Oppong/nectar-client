@@ -22,10 +22,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user, accessToken, refreshToken, isAuthenticated: true });
   },
 
-  updateUser: (updatedUser) => {
+  updateUser: async (updatedUser) => {
     const { user } = get();
     if (user) {
-      set({ user: { ...user, ...updatedUser } });
+      const newUser = { ...user, ...updatedUser };
+      set({ user: newUser });
+      await SecureStore.setItemAsync(AUTH_KEYS.USER, JSON.stringify(newUser));
     }
   },
 

@@ -31,7 +31,7 @@ export interface AuthState {
     accessToken: string;
     refreshToken: string;
   }) => Promise<void>;
-  updateUser: (user: Partial<User>) => void;
+  updateUser: (user: Partial<User>) => Promise<void>;
   clearCredentials: () => Promise<void>;
   hydrate: () => Promise<void>;
 }
