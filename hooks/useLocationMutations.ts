@@ -21,7 +21,6 @@ export function useUpdateLocation() {
         text1: "Location Set!",
         text2: "Your profile is now complete.",
       });
-
       router.replace("/(tabs)/shop");
     },
     onError: (err) => {
